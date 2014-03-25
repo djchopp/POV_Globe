@@ -1,10 +1,16 @@
-/*
- * POV_Helper.c
- *
- *  Created on: Mar 2, 2014
- *      Author: DC
- */
-
+//*****************************************************************************
+// Filename: POV_Helper.c
+// Author: Derek Chopp
+// Last Update: 3/25/14
+//
+// Description: Helper functions for the POV Globe.
+// Use this section to manipulate the LED data.
+//
+// TODO:
+// Cleanup...
+// Add functions as needed
+//
+//*****************************************************************************
 
 #include "POV_Helper.h"
 

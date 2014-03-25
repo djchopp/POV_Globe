@@ -1,9 +1,14 @@
-/*
- * SPI_Helper.h
- *
- *  Created on: Mar 2, 2014
- *      Author: DC
- */
+//*****************************************************************************
+// Filename: SPI_Helper.h
+// Author: Derek Chopp
+// Last Update: 3/25/14
+//
+// Description: Header file for SPI helper code
+//
+// TODO:
+// same as SPI_Helper.c
+//
+//*****************************************************************************
 
 #ifndef SPI_HELPER_H_
 #define SPI_HELPER_H_
@@ -17,9 +22,17 @@
 #include "driverlib/pin_map.h"
 #include "driverlib/ssi.h"
 
+//*****************************************************************************
+// Define Constants
+//*****************************************************************************
 #define SPI_CLOCK 8000000
 
-void SPI_Init();
 
+//*****************************************************************************
+// Function Prototypes
+//*****************************************************************************
+void SPI_Init();
+void SPI_Send(unsigned char data);
+void SPI_Wait();
 
 #endif /* SPI_HELPER_H_ */

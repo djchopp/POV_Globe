@@ -1,9 +1,16 @@
-/*
- * SPI_Helper.c
- *
- *  Created on: Mar 2, 2014
- *      Author: DC
- */
+//*****************************************************************************
+// Filename: SPI_Helper.c
+// Author: Derek Chopp
+// Last Update: 3/25/14
+//
+// Description: Helper functions for the SPI.
+// All SPI module interaction is handled through this helper
+// There should not be any SSI access in any other files
+//
+// TODO:
+// Clean up...
+//
+//*****************************************************************************
 
 #include "SPI_Helper.h"
 
@@ -28,4 +35,12 @@ void SPI_Init(){
     SSIClockSourceSet(SSI0_BASE, SSI_CLOCK_PIOSC);
     SSIConfigSetExpClk(SSI0_BASE, 16000000, SSI_FRF_MOTO_MODE_0, SSI_MODE_MASTER, SPI_CLOCK, 8);
     SSIEnable(SSI0_BASE);
+}
+
+void SPI_Send(unsigned char data){
+	SSIDataPut(SSI0_BASE, data);
+}
+
+void SPI_Wait(){
+	while(SSIBusy(SSI0_BASE));
 }

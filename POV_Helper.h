@@ -1,15 +1,24 @@
-/*
- * POV_Helper.h
- *
- *  Created on: Mar 2, 2014
- *      Author: DC
- */
+//*****************************************************************************
+// Filename: POV_Helper.h
+// Author: Derek Chopp
+// Last Update: 3/25/14
+//
+// Description: Header file for POV helper code
+//
+// TODO:
+// same as POV_Helper.c
+//
+//*****************************************************************************
 
 #ifndef POV_HELPER_H_
 #define POV_HELPER_H_
 
 #include <stdint.h>
 
+
+//*****************************************************************************
+// Define Constants
+//*****************************************************************************
 #define NUM_MODULES 2
 #define NUM_ROWS 360
 
@@ -21,9 +30,9 @@
 #define CTRL3 0xFF
 
 
-/*\
- * Structures to hold LED data
- */
+//*****************************************************************************
+// Structures
+//*****************************************************************************
 //LED holds RGB data for individual LED's
 typedef struct
 {
@@ -44,23 +53,22 @@ typedef struct
 	LED_Module M[NUM_MODULES];
 } LED_Array;
 
-
-
-
+//LED Packet
 typedef struct
 {
 	unsigned char Packet[28];
 } LED_PACKET;
 
+//LED Message
 typedef struct
 {
 	LED_PACKET Packets[NUM_MODULES];
 } LED_MSG;
 
 
-/*
- * Function Prototypes
- */
+//*****************************************************************************
+// Function Prototypes
+//*****************************************************************************
 void POV_Init(LED_Array *LEDS);
 void Make_MSG(LED_MSG *msg, LED_Array *LEDS);
 void Set_All(LED_Array *LEDS, uint16_t newRed, uint16_t newBlue, uint16_t newGreen);
