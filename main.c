@@ -24,6 +24,7 @@
 #include "driverlib/gpio.h"
 #include "driverlib/pin_map.h"
 #include "driverlib/ssi.h"
+#include "PinSetup.h"
 #include "POV_Helper.h"
 #include "SPI_Helper.h"
 
@@ -59,6 +60,8 @@ int main(void)
     SysCtlClockSet(SYSCTL_SYSDIV_4|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|
                     SYSCTL_OSC_MAIN);
 
+    PortFunctionInit();
+
     //Placeholders for LED data
 	LED_Array currentRow;
 	LED_MSG currentMSG;
@@ -68,66 +71,79 @@ int main(void)
 	POV_Init(&currentRow);
 
 
+
 	//Test Loop
     while(1){
     	//Red
 		Set_All(&currentRow, 255, 0, 0);
 		Make_MSG(&currentMSG, &currentRow);
+		Send_MSG(&currentMSG);
     	SysCtlDelay(delay);
 
     	//Orange
 		Set_All(&currentRow, 255, 128, 0);
 		Make_MSG(&currentMSG, &currentRow);
+		Send_MSG(&currentMSG);
     	SysCtlDelay(delay);
 
     	//Yellow
 		Set_All(&currentRow, 255, 255, 0);
 		Make_MSG(&currentMSG, &currentRow);
-    	SysCtlDelay(delay);
+		Send_MSG(&currentMSG);
+		SysCtlDelay(delay);
 
     	//Yellow Green
 		Set_All(&currentRow, 128, 255, 0);
 		Make_MSG(&currentMSG, &currentRow);
-    	SysCtlDelay(delay);
+		Send_MSG(&currentMSG);
+		SysCtlDelay(delay);
 
     	//Green
 		Set_All(&currentRow, 0, 255, 0);
 		Make_MSG(&currentMSG, &currentRow);
-    	SysCtlDelay(delay);
+		Send_MSG(&currentMSG);
+		SysCtlDelay(delay);
 
     	//Light Green
 		Set_All(&currentRow, 0, 255, 128);
 		Make_MSG(&currentMSG, &currentRow);
-    	SysCtlDelay(delay);
+		Send_MSG(&currentMSG);
+		SysCtlDelay(delay);
 
     	//Light Blue
 		Set_All(&currentRow, 0, 255, 255);
 		Make_MSG(&currentMSG, &currentRow);
-    	SysCtlDelay(delay);
+		Send_MSG(&currentMSG);
+		SysCtlDelay(delay);
 
     	//Med Blue
 		Set_All(&currentRow, 0, 128, 255);
 		Make_MSG(&currentMSG, &currentRow);
-    	SysCtlDelay(delay);
+		Send_MSG(&currentMSG);
+		SysCtlDelay(delay);
 
     	//Blue
 		Set_All(&currentRow, 0, 0, 255);
 		Make_MSG(&currentMSG, &currentRow);
+		Send_MSG(&currentMSG);
     	SysCtlDelay(delay);
 
     	//Purple
 		Set_All(&currentRow, 127, 0, 255);
 		Make_MSG(&currentMSG, &currentRow);
+		Send_MSG(&currentMSG);
     	SysCtlDelay(delay);
 
     	//Violet
 		Set_All(&currentRow, 255, 0, 255);
 		Make_MSG(&currentMSG, &currentRow);
+		Send_MSG(&currentMSG);
     	SysCtlDelay(delay);
 
     	//Pink
 		Set_All(&currentRow, 255, 0, 127);
 		Make_MSG(&currentMSG, &currentRow);
+		Send_MSG(&currentMSG);
     	SysCtlDelay(delay);
     }
 }
