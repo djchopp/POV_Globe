@@ -43,6 +43,7 @@
 #include "inc/hw_gpio.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/pin_map.h"
+#include "driverlib/rom_map.h"
 #include "driverlib/gpio.h"
 
 //*****************************************************************************
@@ -52,34 +53,22 @@ PortFunctionInit(void)
     //
     // Enable Peripheral Clocks 
     //
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_SSI1);
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_SSI3);
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
+    MAP_SysCtlPeripheralEnable(SYSCTL_PERIPH_SSI3);
+    MAP_SysCtlPeripheralEnable(SYSCTL_PERIPH_SSI1);
+    MAP_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+    MAP_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
+    MAP_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
 
     //
     // Enable pin PA2 for GPIOInput
     //
-    GPIOPinTypeGPIOInput(GPIO_PORTA_BASE, GPIO_PIN_2);
+    MAP_GPIOPinTypeGPIOInput(GPIO_PORTA_BASE, GPIO_PIN_2);
 
     //
     // Enable pin PF3 for SSI1 SSI1FSS
     //
-    GPIOPinConfigure(GPIO_PF3_SSI1FSS);
-    GPIOPinTypeSSI(GPIO_PORTF_BASE, GPIO_PIN_3);
-
-    //
-    // Enable pin PF1 for SSI1 SSI1TX
-    //
-    GPIOPinConfigure(GPIO_PF1_SSI1TX);
-    GPIOPinTypeSSI(GPIO_PORTF_BASE, GPIO_PIN_1);
-
-    //
-    // Enable pin PF2 for SSI1 SSI1CLK
-    //
-    GPIOPinConfigure(GPIO_PF2_SSI1CLK);
-    GPIOPinTypeSSI(GPIO_PORTF_BASE, GPIO_PIN_2);
+    MAP_GPIOPinConfigure(GPIO_PF3_SSI1FSS);
+    MAP_GPIOPinTypeSSI(GPIO_PORTF_BASE, GPIO_PIN_3);
 
     //
     // Enable pin PF0 for SSI1 SSI1RX
@@ -91,30 +80,42 @@ PortFunctionInit(void)
     //
     // Now modify the configuration of the pins that we unlocked.
     //
-    GPIOPinConfigure(GPIO_PF0_SSI1RX);
-    GPIOPinTypeSSI(GPIO_PORTF_BASE, GPIO_PIN_0);
+    MAP_GPIOPinConfigure(GPIO_PF0_SSI1RX);
+    MAP_GPIOPinTypeSSI(GPIO_PORTF_BASE, GPIO_PIN_0);
+
+    //
+    // Enable pin PF1 for SSI1 SSI1TX
+    //
+    MAP_GPIOPinConfigure(GPIO_PF1_SSI1TX);
+    MAP_GPIOPinTypeSSI(GPIO_PORTF_BASE, GPIO_PIN_1);
+
+    //
+    // Enable pin PF2 for SSI1 SSI1CLK
+    //
+    MAP_GPIOPinConfigure(GPIO_PF2_SSI1CLK);
+    MAP_GPIOPinTypeSSI(GPIO_PORTF_BASE, GPIO_PIN_2);
 
     //
     // Enable pin PD3 for SSI3 SSI3TX
     //
-    GPIOPinConfigure(GPIO_PD3_SSI3TX);
-    GPIOPinTypeSSI(GPIO_PORTD_BASE, GPIO_PIN_3);
-
-    //
-    // Enable pin PD1 for SSI3 SSI3FSS
-    //
-    GPIOPinConfigure(GPIO_PD1_SSI3FSS);
-    GPIOPinTypeSSI(GPIO_PORTD_BASE, GPIO_PIN_1);
-
-    //
-    // Enable pin PD0 for SSI3 SSI3CLK
-    //
-    GPIOPinConfigure(GPIO_PD0_SSI3CLK);
-    GPIOPinTypeSSI(GPIO_PORTD_BASE, GPIO_PIN_0);
+    MAP_GPIOPinConfigure(GPIO_PD3_SSI3TX);
+    MAP_GPIOPinTypeSSI(GPIO_PORTD_BASE, GPIO_PIN_3);
 
     //
     // Enable pin PD2 for SSI3 SSI3RX
     //
-    GPIOPinConfigure(GPIO_PD2_SSI3RX);
-    GPIOPinTypeSSI(GPIO_PORTD_BASE, GPIO_PIN_2);
+    MAP_GPIOPinConfigure(GPIO_PD2_SSI3RX);
+    MAP_GPIOPinTypeSSI(GPIO_PORTD_BASE, GPIO_PIN_2);
+
+    //
+    // Enable pin PD0 for SSI3 SSI3CLK
+    //
+    MAP_GPIOPinConfigure(GPIO_PD0_SSI3CLK);
+    MAP_GPIOPinTypeSSI(GPIO_PORTD_BASE, GPIO_PIN_0);
+
+    //
+    // Enable pin PD1 for SSI3 SSI3FSS
+    //
+    MAP_GPIOPinConfigure(GPIO_PD1_SSI3FSS);
+    MAP_GPIOPinTypeSSI(GPIO_PORTD_BASE, GPIO_PIN_1);
 }

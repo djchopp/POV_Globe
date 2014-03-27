@@ -16,38 +16,7 @@
 //
 //*****************************************************************************
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "inc/hw_types.h"
-#include "inc/hw_memmap.h"
-#include "driverlib/sysctl.h"
-#include "driverlib/gpio.h"
-#include "driverlib/pin_map.h"
-#include "driverlib/ssi.h"
-#include "PinSetup.h"
-#include "POV_Helper.h"
-#include "SPI_Helper.h"
-
-//*****************************************************************************
-// Define Constants
-//*****************************************************************************
-#define delay 5000000
-
-//*****************************************************************************
-// The error routine that is called if the driver library encounters an error.
-//*****************************************************************************
-#ifdef DEBUG
-void
-__error__(char *pcFilename, uint32_t ui32Line)
-{
-}
-#endif
-
-
-//*****************************************************************************
-// Function Prototypes
-//*****************************************************************************
-void Send_MSG(LED_MSG *currentMSG);
+#include "main.h"
 
 //*****************************************************************************
 // Main 'C' Language entry point.
@@ -62,6 +31,26 @@ int main(void)
 
     PortFunctionInit();
 
+    FRESULT iFResult;
+    BYTE buffer[3];
+    UINT br;
+    iFResult = f_mount(0, &g_sFatFs);
+
+    if(iFResult != FR_OK) while(1);
+
+    iFResult = f_open(&g_sFileObject,"data.txt", FA_READ);
+    if(iFResult != FR_OK) while(1);
+
+    f_read(&g_sFileObject, buffer, 3, &br);
+
+    f_close(&g_sFileObject);
+
+
+    // Unregister a work area before discard it
+    f_mount(0, 0);
+
+
+
     //Placeholders for LED data
 	LED_Array currentRow;
 	LED_MSG currentMSG;
@@ -71,7 +60,12 @@ int main(void)
 	POV_Init(&currentRow);
 
 
+	Set_All(&currentRow, buffer[0], buffer[1], buffer[2]);
+	Make_MSG(&currentMSG, &currentRow);
+	Send_MSG(&currentMSG);
 
+
+	/*
 	//Test Loop
     while(1){
     	//Red
@@ -146,6 +140,7 @@ int main(void)
 		Send_MSG(&currentMSG);
     	SysCtlDelay(delay);
     }
+	*/
 }
 
 //*****************************************************************************
