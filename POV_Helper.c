@@ -54,9 +54,9 @@ void Set_All(LED_Array *LEDS, uint16_t newRed, uint16_t newBlue, uint16_t newGre
 
 	for(i=0;i<NUM_MODULES;i++){
 		for(j=0;j<4;j++){
-			LEDS->M[i].D[j].R = newRed;
-			LEDS->M[i].D[j].G = newBlue;
-			LEDS->M[i].D[j].B = newGreen;
+			LEDS->M[i].D[j].R = newRed * multiplier;
+			LEDS->M[i].D[j].G = newBlue * multiplier;
+			LEDS->M[i].D[j].B = newGreen * multiplier;
 		}
 	}
 }

@@ -22,7 +22,7 @@
 #define NUM_MODULES 2
 #define NUM_ROWS 360
 
-#define multiplier 16
+#define multiplier 2
 
 #define CTRL0 0x96
 #define CTRL1 0xC8

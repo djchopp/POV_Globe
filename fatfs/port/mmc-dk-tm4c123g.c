@@ -197,7 +197,7 @@ void power_on (void)
 
     /* Configure the SSI0 port */
     ROM_SSIConfigSetExpClk(SDC_SSI_BASE, ROM_SysCtlClockGet(),
-                           SSI_FRF_MOTO_MODE_0, SSI_MODE_MASTER, 400000, 8);
+                           SSI_FRF_MOTO_MODE_0, SSI_MODE_MASTER, 8000000, 8);
     ROM_SSIEnable(SDC_SSI_BASE);
 
     /* Set DI and CS high and apply more than 74 pulses to SCLK for the card */

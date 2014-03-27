@@ -25,7 +25,7 @@
 //*****************************************************************************
 // Define Constants
 //*****************************************************************************
-#define delay 5000000
+#define delay 500000
 
 //*****************************************************************************
 // The error routine that is called if the driver library encounters an error.
@@ -42,6 +42,7 @@ __error__(char *pcFilename, uint32_t ui32Line)
 // Function Prototypes
 //*****************************************************************************
 void Send_MSG(LED_MSG *currentMSG);
+void Read_Send();
 
 
 //*****************************************************************************
@@ -52,5 +53,11 @@ static DIR g_sDirObject;
 static FILINFO g_sFileInfo;
 static FIL g_sFileObject;
 
+FRESULT iFResult;
+BYTE buffer[3];
+UINT br;
+
+LED_Array currentRow;
+LED_MSG currentMSG;
 
 #endif /* MAIN_H_ */

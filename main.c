@@ -23,6 +23,7 @@
 //*****************************************************************************
 int main(void)
 {
+	int i = 0;
 	//
     // Setup the system clock to run at 50 Mhz from PLL with crystal reference
     //
@@ -31,29 +32,13 @@ int main(void)
 
     PortFunctionInit();
 
-    FRESULT iFResult;
-    BYTE buffer[3];
-    UINT br;
+
     iFResult = f_mount(0, &g_sFatFs);
 
     if(iFResult != FR_OK) while(1);
 
-    iFResult = f_open(&g_sFileObject,"data.txt", FA_READ);
+    iFResult = f_open(&g_sFileObject,"LED_Data.txt", FA_READ);
     if(iFResult != FR_OK) while(1);
-
-    f_read(&g_sFileObject, buffer, 3, &br);
-
-    f_close(&g_sFileObject);
-
-
-    // Unregister a work area before discard it
-    f_mount(0, 0);
-
-
-
-    //Placeholders for LED data
-	LED_Array currentRow;
-	LED_MSG currentMSG;
 
     //Initialize
 	SPI_Init();
@@ -64,6 +49,23 @@ int main(void)
 	Make_MSG(&currentMSG, &currentRow);
 	Send_MSG(&currentMSG);
 
+	while(1){
+		Read_Send();
+		i++;
+		SysCtlDelay(delay);
+		if(i>11){
+			i = 0;
+			f_lseek(&g_sFileObject, 0);
+		}
+	}
+
+    //f_read(&g_sFileObject, buffer, 3, &br);
+
+    //f_close(&g_sFileObject);
+
+
+    // Unregister a work area before discard it
+    //f_mount(0, 0);
 
 	/*
 	//Test Loop
@@ -154,5 +156,12 @@ void Send_MSG(LED_MSG *currentMSG){
 		}
 		SPI_Wait();
 	}
+}
+
+void Read_Send(){
+	f_read(&g_sFileObject, buffer, 3, &br);
+	Set_All(&currentRow, buffer[0], buffer[1], buffer[2]);
+	Make_MSG(&currentMSG, &currentRow);
+	Send_MSG(&currentMSG);
 }
 
