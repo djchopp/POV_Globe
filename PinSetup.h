@@ -37,7 +37,9 @@
 
 #ifndef __PINSETUP_H__
 #define __PINSETUP_H__
-
+//*****************************************************************************
+// Function Prototypes
+//*****************************************************************************
 extern void PortFunctionInit(void);
 
 #endif //  __PINSETUP_H__
