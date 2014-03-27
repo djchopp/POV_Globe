@@ -26,42 +26,7 @@ void POV_Init(LED_Array *LEDS){
 	}
 }
 
-void Shift_Up(LED_Array *LEDS, uint16_t newRed, uint16_t newBlue, uint16_t newGreen){
-	int i,j;
-
-
-	for(i=(NUM_MODULES-1);i>=0;i--){
-		for(j=3;j>0;j--){
-			LEDS->M[i].D[j].R = LEDS->M[i].D[j-1].R;
-			LEDS->M[i].D[j].G = LEDS->M[i].D[j-1].G;
-			LEDS->M[i].D[j].B = LEDS->M[i].D[j-1].B;
-		}
-		if(i>0){
-			LEDS->M[i].D[j].R = LEDS->M[i-1].D[3].R;
-			LEDS->M[i].D[j].G = LEDS->M[i-1].D[3].G;
-			LEDS->M[i].D[j].B = LEDS->M[i-1].D[3].B;
-		}
-	}
-
-	LEDS->M[0].D[0].R = newRed;
-	LEDS->M[0].D[0].G = newGreen;
-	LEDS->M[0].D[0].B = newBlue;
-
-}
-
-void Set_All(LED_Array *LEDS, uint16_t newRed, uint16_t newBlue, uint16_t newGreen){
-	int i,j;
-
-	for(i=0;i<NUM_MODULES;i++){
-		for(j=0;j<4;j++){
-			LEDS->M[i].D[j].R = newRed * multiplier;
-			LEDS->M[i].D[j].G = newBlue * multiplier;
-			LEDS->M[i].D[j].B = newGreen * multiplier;
-		}
-	}
-}
-
-void Make_MSG(LED_MSG *msg, LED_Array *LEDS){
+void POV_Make_MSG(LED_MSG *msg, LED_Array *LEDS){
 	int i;
 
 
@@ -99,3 +64,51 @@ void Make_MSG(LED_MSG *msg, LED_Array *LEDS){
 		msg->Packets[i].Packet[27] = ((LEDS->M[i].D[0].R))&0xFF;
 	}
 }
+
+void POV_Prepare_Data(LED_Array *LEDS, unsigned char *newData){
+	int i, j;
+	for(i=0;i<NUM_MODULES;i++){
+		for(j=0;j<4;j++){
+			LEDS->M[i].D[j].R = newData[0+3*j+12*i] * multiplier;
+			LEDS->M[i].D[j].G = newData[1+3*j+12*i] * multiplier;
+			LEDS->M[i].D[j].B = newData[2+3*j+12*i] * multiplier;
+		}
+	}
+}
+
+void POV_Shift_Up(LED_Array *LEDS, uint16_t newRed, uint16_t newBlue, uint16_t newGreen){
+	int i,j;
+
+
+	for(i=(NUM_MODULES-1);i>=0;i--){
+		for(j=3;j>0;j--){
+			LEDS->M[i].D[j].R = LEDS->M[i].D[j-1].R;
+			LEDS->M[i].D[j].G = LEDS->M[i].D[j-1].G;
+			LEDS->M[i].D[j].B = LEDS->M[i].D[j-1].B;
+		}
+		if(i>0){
+			LEDS->M[i].D[j].R = LEDS->M[i-1].D[3].R;
+			LEDS->M[i].D[j].G = LEDS->M[i-1].D[3].G;
+			LEDS->M[i].D[j].B = LEDS->M[i-1].D[3].B;
+		}
+	}
+
+	LEDS->M[0].D[0].R = newRed;
+	LEDS->M[0].D[0].G = newGreen;
+	LEDS->M[0].D[0].B = newBlue;
+
+}
+
+void POV_Set_All(LED_Array *LEDS, uint16_t newRed, uint16_t newBlue, uint16_t newGreen){
+	int i,j;
+
+	for(i=0;i<NUM_MODULES;i++){
+		for(j=0;j<4;j++){
+			LEDS->M[i].D[j].R = newRed * multiplier;
+			LEDS->M[i].D[j].G = newBlue * multiplier;
+			LEDS->M[i].D[j].B = newGreen * multiplier;
+		}
+	}
+}
+
+

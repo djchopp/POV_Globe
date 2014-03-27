@@ -23,126 +23,60 @@
 //*****************************************************************************
 int main(void)
 {
-	int i = 0;
+
 	//
     // Setup the system clock to run at 50 Mhz from PLL with crystal reference
     //
     SysCtlClockSet(SYSCTL_SYSDIV_4|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|
                     SYSCTL_OSC_MAIN);
 
-    PortFunctionInit();
-
-
-    iFResult = f_mount(0, &g_sFatFs);
-
-    if(iFResult != FR_OK) while(1);
-
-    iFResult = f_open(&g_sFileObject,"LED_Data.txt", FA_READ);
-    if(iFResult != FR_OK) while(1);
-
     //Initialize
+    PortFunctionInit();
 	SPI_Init();
-	POV_Init(&currentRow);
+	POV_Init(&currentLine);
+
+	//SD card startup
+    iFResult = f_mount(0, &g_sFatFs);
+    if(iFResult != FR_OK) while(1);
+
+    iFResult = f_open(&g_sFileObject,"LED.dat", FA_READ);
+    if(iFResult != FR_OK) while(1);
+
+    numData = SD_Read_Header();
 
 
-	Set_All(&currentRow, buffer[0], buffer[1], buffer[2]);
-	Make_MSG(&currentMSG, &currentRow);
-	Send_MSG(&currentMSG);
 
+	/*RPM Timer*/
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
+    TimerConfigure(TIMER0_BASE, TIMER_CFG_ONE_SHOT_UP );
+
+    rpmPeriod = SysCtlClockGet();
+    TimerLoadSet(TIMER0_BASE, TIMER_A, rpmPeriod -1);
+
+    IntEnable(INT_TIMER0A);
+    TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
+
+
+	/*Display timer*/
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER1);
+    TimerConfigure(TIMER1_BASE, TIMER_CFG_PERIODIC);
+
+    displayPeriod = (SysCtlClockGet()/2);
+    TimerLoadSet(TIMER1_BASE, TIMER_A, displayPeriod -1);
+
+    IntEnable(INT_TIMER1A);
+    TimerIntEnable(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
+
+
+    IntMasterEnable();
+
+    //TimerEnable(TIMER0_BASE, TIMER_A);
+    TimerEnable(TIMER1_BASE, TIMER_A);
+
+    //Do nothing, timers handle all interaction from here on
 	while(1){
-		Read_Send();
-		i++;
-		SysCtlDelay(delay);
-		if(i>11){
-			i = 0;
-			f_lseek(&g_sFileObject, 0);
-		}
+
 	}
-
-    //f_read(&g_sFileObject, buffer, 3, &br);
-
-    //f_close(&g_sFileObject);
-
-
-    // Unregister a work area before discard it
-    //f_mount(0, 0);
-
-	/*
-	//Test Loop
-    while(1){
-    	//Red
-		Set_All(&currentRow, 255, 0, 0);
-		Make_MSG(&currentMSG, &currentRow);
-		Send_MSG(&currentMSG);
-    	SysCtlDelay(delay);
-
-    	//Orange
-		Set_All(&currentRow, 255, 128, 0);
-		Make_MSG(&currentMSG, &currentRow);
-		Send_MSG(&currentMSG);
-    	SysCtlDelay(delay);
-
-    	//Yellow
-		Set_All(&currentRow, 255, 255, 0);
-		Make_MSG(&currentMSG, &currentRow);
-		Send_MSG(&currentMSG);
-		SysCtlDelay(delay);
-
-    	//Yellow Green
-		Set_All(&currentRow, 128, 255, 0);
-		Make_MSG(&currentMSG, &currentRow);
-		Send_MSG(&currentMSG);
-		SysCtlDelay(delay);
-
-    	//Green
-		Set_All(&currentRow, 0, 255, 0);
-		Make_MSG(&currentMSG, &currentRow);
-		Send_MSG(&currentMSG);
-		SysCtlDelay(delay);
-
-    	//Light Green
-		Set_All(&currentRow, 0, 255, 128);
-		Make_MSG(&currentMSG, &currentRow);
-		Send_MSG(&currentMSG);
-		SysCtlDelay(delay);
-
-    	//Light Blue
-		Set_All(&currentRow, 0, 255, 255);
-		Make_MSG(&currentMSG, &currentRow);
-		Send_MSG(&currentMSG);
-		SysCtlDelay(delay);
-
-    	//Med Blue
-		Set_All(&currentRow, 0, 128, 255);
-		Make_MSG(&currentMSG, &currentRow);
-		Send_MSG(&currentMSG);
-		SysCtlDelay(delay);
-
-    	//Blue
-		Set_All(&currentRow, 0, 0, 255);
-		Make_MSG(&currentMSG, &currentRow);
-		Send_MSG(&currentMSG);
-    	SysCtlDelay(delay);
-
-    	//Purple
-		Set_All(&currentRow, 127, 0, 255);
-		Make_MSG(&currentMSG, &currentRow);
-		Send_MSG(&currentMSG);
-    	SysCtlDelay(delay);
-
-    	//Violet
-		Set_All(&currentRow, 255, 0, 255);
-		Make_MSG(&currentMSG, &currentRow);
-		Send_MSG(&currentMSG);
-    	SysCtlDelay(delay);
-
-    	//Pink
-		Set_All(&currentRow, 255, 0, 127);
-		Make_MSG(&currentMSG, &currentRow);
-		Send_MSG(&currentMSG);
-    	SysCtlDelay(delay);
-    }
-	*/
 }
 
 //*****************************************************************************
@@ -158,10 +92,46 @@ void Send_MSG(LED_MSG *currentMSG){
 	}
 }
 
-void Read_Send(){
-	f_read(&g_sFileObject, buffer, 3, &br);
-	Set_All(&currentRow, buffer[0], buffer[1], buffer[2]);
-	Make_MSG(&currentMSG, &currentRow);
-	Send_MSG(&currentMSG);
+
+/*Reads in the number of data points. located at first 32 bits of data file*/
+uint32_t SD_Read_Header(){
+	uint32_t tempNum = 0;
+	f_read(&g_sFileObject, buffer, 4, &br);
+	tempNum = buffer[3];
+	tempNum = tempNum | ((buffer[2]<<8) & 0xFF00);
+	tempNum = tempNum | ((buffer[1]<<16) & 0xFF0000);
+	tempNum = tempNum | ((buffer[0]<<24) & 0xFF000000);
+	return tempNum;
 }
 
+
+void SD_Read_Line(){
+	f_read(&g_sFileObject, buffer, 3*4*NUM_MODULES, &br);
+	POV_Prepare_Data(&currentLine, buffer);
+}
+
+void Timer0IntHandler(void)
+{
+
+	// Clear the timer interrupt
+	TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
+}
+
+void Timer1IntHandler(void)
+{
+	SD_Read_Line();//read data from sd card into currentLine
+
+	POV_Make_MSG(&currentMSG, &currentLine);//construct message
+	Send_MSG(&currentMSG);//send message
+
+	packetCount+=4*NUM_MODULES;//update number of packets sent
+
+	//if at end of file, go back to beginning
+	if(packetCount>(numData-1)){
+		packetCount = 0;
+		f_lseek(&g_sFileObject, 4);
+	}
+
+	// Clear the timer interrupt
+	TimerIntClear(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
+}

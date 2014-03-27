@@ -20,14 +20,14 @@
 // Define Constants
 //*****************************************************************************
 #define NUM_MODULES 2
-#define NUM_ROWS 360
-
+#define NUM_DIVS 180
 #define multiplier 2
 
 #define CTRL0 0x96
 #define CTRL1 0xC8
 #define CTRL2 0xFF
 #define CTRL3 0xFF
+
 
 
 //*****************************************************************************
@@ -70,8 +70,9 @@ typedef struct
 // Function Prototypes
 //*****************************************************************************
 void POV_Init(LED_Array *LEDS);
-void Make_MSG(LED_MSG *msg, LED_Array *LEDS);
-void Set_All(LED_Array *LEDS, uint16_t newRed, uint16_t newBlue, uint16_t newGreen);
-void Shift_Up(LED_Array *LEDS, uint16_t newRed, uint16_t newBlue, uint16_t newGreen);
+void POV_Make_MSG(LED_MSG *msg, LED_Array *LEDS);
+void POV_Prepare_Data(LED_Array *LEDS, unsigned char *newData);
+void POV_Set_All(LED_Array *LEDS, uint16_t newRed, uint16_t newBlue, uint16_t newGreen);
+void POV_Shift_Up(LED_Array *LEDS, uint16_t newRed, uint16_t newBlue, uint16_t newGreen);
 
 #endif /* POV_HELPER_H_ */
