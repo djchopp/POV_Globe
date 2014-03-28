@@ -32,7 +32,7 @@
 // Function Prototypes
 //*****************************************************************************
 void SPI_Init();
-void SPI_Send(unsigned char data);
+void SPI_Send(uint8_t data);
 void SPI_Wait();
 
 #endif /* SPI_HELPER_H_ */

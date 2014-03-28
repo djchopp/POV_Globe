@@ -83,7 +83,7 @@ int main(void)
 // Send the current message over SPI
 //*****************************************************************************
 void Send_MSG(LED_MSG *currentMSG){
-	int i,j;
+	uint32_t i,j;
 	for(i=NUM_MODULES;i>=0;i--){
 		for(j=0;j<28;j++){
 			SPI_Send(currentMSG->Packets[i].Packet[j]);

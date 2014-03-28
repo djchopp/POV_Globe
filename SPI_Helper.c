@@ -22,7 +22,7 @@ void SPI_Init(){
     SSIEnable(SSI1_BASE);
 }
 
-void SPI_Send(unsigned char data){
+void SPI_Send(uint8_t data){
 	SSIDataPut(SSI1_BASE, data);
 }
 

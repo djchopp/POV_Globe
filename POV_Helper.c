@@ -15,7 +15,7 @@
 #include "POV_Helper.h"
 
 void POV_Init(LED_Array *LEDS){
-	int i,j;
+	uint32_t i,j;
 
 	for(i=0;i<NUM_MODULES;i++){
 		for(j=0;j<4;j++){
@@ -65,8 +65,8 @@ void POV_Make_MSG(LED_MSG *msg, LED_Array *LEDS){
 	}
 }
 
-void POV_Prepare_Data(LED_Array *LEDS, unsigned char *newData){
-	int i, j;
+void POV_Prepare_Data(LED_Array *LEDS, uint8_t *newData){
+	uint32_t i, j;
 	for(i=0;i<NUM_MODULES;i++){
 		for(j=0;j<4;j++){
 			LEDS->M[i].D[j].R = newData[0+3*j+12*i] * multiplier;
@@ -77,7 +77,7 @@ void POV_Prepare_Data(LED_Array *LEDS, unsigned char *newData){
 }
 
 void POV_Shift_Up(LED_Array *LEDS, uint16_t newRed, uint16_t newBlue, uint16_t newGreen){
-	int i,j;
+	uint32_t i,j;
 
 
 	for(i=(NUM_MODULES-1);i>=0;i--){
@@ -100,7 +100,7 @@ void POV_Shift_Up(LED_Array *LEDS, uint16_t newRed, uint16_t newBlue, uint16_t n
 }
 
 void POV_Set_All(LED_Array *LEDS, uint16_t newRed, uint16_t newBlue, uint16_t newGreen){
-	int i,j;
+	uint32_t i,j;
 
 	for(i=0;i<NUM_MODULES;i++){
 		for(j=0;j<4;j++){

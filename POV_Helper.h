@@ -71,7 +71,7 @@ typedef struct
 //*****************************************************************************
 void POV_Init(LED_Array *LEDS);
 void POV_Make_MSG(LED_MSG *msg, LED_Array *LEDS);
-void POV_Prepare_Data(LED_Array *LEDS, unsigned char *newData);
+void POV_Prepare_Data(LED_Array *LEDS, uint8_t *newData);
 void POV_Set_All(LED_Array *LEDS, uint16_t newRed, uint16_t newBlue, uint16_t newGreen);
 void POV_Shift_Up(LED_Array *LEDS, uint16_t newRed, uint16_t newBlue, uint16_t newGreen);
 
